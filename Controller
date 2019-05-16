@@ -1,0 +1,43 @@
+public class IndicarDisponibilidadeDiariaController {
+
+    private Empresa m_oEmpresa;
+    private RegistoPrestadorDeServicos rps;
+    private PrestadorServicos pres;
+    private Disponibilidade disp;
+    private ListaDisponibilidadesDiaria ldd;
+
+    public IndicarDisponibilidadeDiariaController() {
+        if (!AplicacaoGPSD.getInstance().getSessaoAtual().isLoggedInComPapel(Constantes.PAPEL_PRESTADOR_SERVICO)) {
+            throw new IllegalStateException("Utilizador não Autorizado");
+        }
+        this.m_oEmpresa = AplicacaoGPSD.getInstance().getEmpresa();
+    }
+    
+    public Disponibilidade getDisp(){
+        return disp;
+    }
+    
+    public String getDisponibilidadeString(){
+        return this.disp.toString();
+    }
+
+    public void IndicarNovasDisponibilidades() {
+        AplicacaoGPSD app = AplicacaoGPSD.getInstance();
+        SessaoUtilizador sessao = app.getSessaoAtual();
+        String email = sessao.getEmailUtilizador();
+        rps = m_oEmpresa.getRegistoPrestadorDeServicos();
+        pres = rps.getPrestadorServico(email);
+
+    }
+
+    public boolean novoPeriodoDisponibilidade(Data data1, Data data2, Tempo horario1, Tempo horario2) {
+        disp = null;
+        ldd = pres.getListaDisponibilidades();
+        disp = ldd.novoPeriodoDisponibilidade(data1, data2, horario1, horario2);
+        return (disp!=null);
+    }
+
+    public boolean registaPeriodoDisponibilidade() {
+        return ldd.registaPeriodoDisponibilidade(disp);
+    }
+}
