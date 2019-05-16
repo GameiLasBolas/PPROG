@@ -1,0 +1,62 @@
+public class IndicarDisponibilidadeDiariaUI {
+
+    private IndicarDisponibilidadeDiariaController m_controller;
+
+    public IndicarDisponibilidadeDiariaUI() {
+        m_controller = new IndicarDisponibilidadeDiariaController();
+    }
+
+    public void run() {
+        boolean conf=true;
+        System.out.println("\nIndicar a Disponibilidade Diaria:");
+        while(conf ==true){
+        if (introduzDados()) {
+            apresentaDados();
+
+            if (Utils.confirma("Confirma os dados introduzidos? (S/N)")) {
+                if (m_controller.registaPeriodoDisponibilidade()) {
+                    System.out.println("Registo efetuado com sucesso.");
+                } else {
+                    System.out.println("Não foi possivel concluir o registo com sucesso.");
+                }
+            }
+        } else {
+            System.out.println("Ocorreu um erro. Operação cancelada.");
+        }
+        conf =Utils.confirma("Deseja introduzir mais periodos de disponibilidade? (S/N)");
+    }
+    }
+
+    private boolean introduzDados() {
+
+        System.out.println("Introduza a data de inicio:");
+        int anoI = Utils.readIntegerFromConsole("Ano: ");
+        int mesI = Utils.readIntegerFromConsole("Mês: ");
+        int diaI = Utils.readIntegerFromConsole("Dia: ");
+        Data dataInicio = new Data(anoI, mesI, diaI);
+
+        System.out.println("Introduza o horário de inicio:");
+        int horasI = Utils.readIntegerFromConsole("Horas: ");
+        int minutosI = Utils.readIntegerFromConsole("Minutos: ");
+        int segundosI = Utils.readIntegerFromConsole("Segundos: ");
+        Tempo horarioInicio = new Tempo(horasI, minutosI, segundosI);
+
+        System.out.println("Introduza a data de fim:");
+        int anoF = Utils.readIntegerFromConsole("Ano: ");
+        int mesF = Utils.readIntegerFromConsole("Mês: ");
+        int diaF = Utils.readIntegerFromConsole("Dia: ");
+        Data dataFim = new Data(anoF, mesF, diaF);
+
+        System.out.println("Introduza o horário de Fim:");
+        int horasF = Utils.readIntegerFromConsole("Horas: ");
+        int minutosF = Utils.readIntegerFromConsole("Minutos: ");
+        int segundosF = Utils.readIntegerFromConsole("Segundos: ");
+        Tempo horarioFim = new Tempo(horasF, minutosF, segundosF);
+
+        return m_controller.novoPeriodoDisponibilidade(dataInicio, dataFim, horarioInicio, horarioFim);
+    }
+
+    private void apresentaDados() {
+        System.out.println("\nDisponibilidade:\n" + m_controller.getDisponibilidadeString());
+    }
+}
